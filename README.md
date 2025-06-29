@@ -1,5 +1,9 @@
 # Serena MCP Flake
 
+## NOTE: doesn't work quite yet
+
+Serena seems to do lots of not totally nix friendly stuff. Currently having issues with `setup_runtime_dependencies` methods
+
 Nix flake for the [Serena MCP Server](https://github.com/oraios/serena).
 
 The Serena configuration file, in this Nix version (see patch), will be located at `$HOME/.config/serena/serena_config.yml`.
