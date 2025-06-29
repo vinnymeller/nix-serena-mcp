@@ -1,0 +1,14 @@
+diff --git a/src/serena/agent.py b/src/serena/agent.py
+index 7da88e1..c457a25 100644
+--- a/src/serena/agent.py
++++ b/src/serena/agent.py
+@@ -394,7 +394,8 @@ class SerenaConfig(SerenaConfigBase):
+     @classmethod
+     def get_config_file_path(cls) -> str:
+         config_file = cls.CONFIG_FILE_DOCKER if is_running_in_docker() else cls.CONFIG_FILE
+-        return os.path.join(REPO_ROOT, config_file)
++        home = os.path.expanduser("~")
++        return os.path.join(home, ".config", "serena", config_file)
+ 
+     @classmethod
+     def _load_commented_yaml(cls, config_file: str, generate_if_missing: bool = True) -> CommentedMap:
