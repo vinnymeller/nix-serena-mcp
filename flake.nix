@@ -39,52 +39,63 @@
       ...
     }:
     let
-      inherit (nixpkgs) lib;
-
-      pkgs = nixpkgs.legacyPackages.x86_64-linux;
-
-      serena-mcp-patched = pkgs.applyPatches {
-        name = "serena-mcp-patched";
-        src = serena-mcp;
-        patches = [
-          ./fix-nix-config-file-path.patch
-        ];
-      };
-
-      workspace = uv2nix.lib.workspace.loadWorkspace { workspaceRoot = serena-mcp-patched; };
-
-      overlay = workspace.mkPyprojectOverlay {
-        sourcePreference = "wheel";
-      };
-
-
-      python = pkgs.python311;
-
-      util = pkgs.callPackages pyproject-nix.build.util { };
-
-      pythonSet =
-        (pkgs.callPackage pyproject-nix.build.packages {
-          inherit python;
-        }).overrideScope
-          (
-            lib.composeManyExtensions [
-              pyproject-build-systems.overlays.default
-              overlay
-            ]
-          );
+      systems = [
+        "x86_64-linux"
+        "aarch64-darwin"
+      ];
+      forAllSystems = f: nixpkgs.lib.genAttrs systems (system: f nixpkgs.legacyPackages.${system});
     in
     {
-      packages.x86_64-linux.default = util.mkApplication {
-        venv = pythonSet.mkVirtualEnv "serena-mcp-env" workspace.deps.default;
-        package = pythonSet.serena;
-      };
 
-      apps.x86_64-linux = {
-        default = {
+      packages = forAllSystems (
+        pkgs:
+        let
+          serena-mcp-patched = pkgs.applyPatches {
+            name = "serena-mcp-patched";
+            src = serena-mcp;
+            patches = [
+              ./fix-nix-config-file-path.patch
+            ];
+          };
+
+          workspace = uv2nix.lib.workspace.loadWorkspace { workspaceRoot = serena-mcp-patched; };
+
+          overlay = workspace.mkPyprojectOverlay {
+            sourcePreference = "wheel";
+          };
+
+          python = pkgs.python311;
+
+          util = pkgs.callPackages pyproject-nix.build.util { };
+
+          pythonSet =
+            (pkgs.callPackage pyproject-nix.build.packages {
+              inherit python;
+            }).overrideScope
+              (
+                nixpkgs.lib.composeManyExtensions [
+                  pyproject-build-systems.overlays.default
+                  overlay
+                ]
+              );
+        in
+        {
+          default = util.mkApplication {
+            venv = pythonSet.mkVirtualEnv "serena-mcp-venv" workspace.deps.default;
+            package = pythonSet.serena;
+          };
+        }
+      );
+
+      apps = nixpkgs.lib.genAttrs systems (system: {
+        index-project = {
           type = "app";
-          program = "${self.packages.x86_64-linux.default}/bin/serena-mcp-server";
+          program = "${self.packages.${system}.default}/bin/index-project";
         };
-      };
-
+        serena-mcp-server = {
+          type = "app";
+          program = "${self.packages.${system}.default}/bin/serena-mcp-server";
+        };
+      });
     };
 }
