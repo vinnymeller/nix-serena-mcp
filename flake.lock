@@ -2,11 +2,11 @@
   "nodes": {
     "nixpkgs": {
       "locked": {
-        "lastModified": 1751011381,
-        "narHash": "sha256-krGXKxvkBhnrSC/kGBmg5MyupUUT5R6IBCLEzx9jhMM=",
+        "lastModified": 1751271578,
+        "narHash": "sha256-P/SQmKDu06x8yv7i0s8bvnnuJYkxVGBWLWHaU+tt4YY=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "30e2e2857ba47844aa71991daa6ed1fc678bcbb7",
+        "rev": "3016b4b15d13f3089db8a41ef937b13a9e33a8df",
         "type": "github"
       },
       "original": {
@@ -74,11 +74,11 @@
     "serena-mcp": {
       "flake": false,
       "locked": {
-        "lastModified": 1751156000,
-        "narHash": "sha256-lf+pxqRu51Hrsni9+qpgjI5ivJUYd6lxFDrp06QHbOY=",
+        "lastModified": 1751382560,
+        "narHash": "sha256-MV+DHYJywlomz+VxYVoloM8OmQzxDPbhhYejwBHhKuk=",
         "owner": "oraios",
         "repo": "serena",
-        "rev": "9c6bb51b9d224847e3716d0b78788de956c7e01e",
+        "rev": "10629e33561b4ebf93627a5ffc9de47bfd1c7595",
         "type": "github"
       },
       "original": {
